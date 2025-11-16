@@ -1,0 +1,30 @@
+<div class="container">
+<p-card header="Invoice">
+  <div class="button-container">
+    <p-button rounded label="Create Invoice" icon="pi pi-plus" (click)="openInvoiceDialog.set(true); this.createInvoiceOption.set(true)"></p-button>
+  </div>
+  <app-table
+    [items]="items()"
+    [cols]="cols()"
+    [loading]="loading()"
+    [inputForm]="searchForm"
+    (onLazyLoad)="searchInvoices($event)"
+    (onRowSelect)="editInvoice($event)"
+  ></app-table>
+</p-card>
+</div>
+@if(openInvoiceDialog()) {
+  <app-dialog [dialog]="dialog()" (primaryActionChange)="this.createInvoiceOption() ? createInvoice() : updateInvoice()" (secondaryActionChange)="openInvoiceDialog.set(false)" [template]="invoiceFormTemplate" [disabled]="createInvoiceForm.invalid" [loading]="createInvoiceLoading()">
+    <ng-template #invoiceFormTemplate>
+      <form [formGroup]="createInvoiceForm">
+        <div class="form-group">
+          <input type="text" pInputText formControlName="invoiceNumber" placeholder="Invoice Number" />
+          <p-date-picker appendTo="body" dateFormat="yy-mm-dd" inputStyleClass="full-width" formControlName="invoiceDate" placeholder="Invoice Date" />
+          <p-input-number currency="ZAR" formControlName="amount" placeholder="Invoice amount" inputId="currency-amount" mode="currency" locale="en-US"/>
+          <p-input-number currency="ZAR" formControlName="vatAmount" placeholder="Vat amount" inputId="currency-vat" mode="currency" locale="en-US" />
+          <p-select appendTo="body" formControlName="status" placeholder="Invoice status" [options]="statusOptions()" />
+        </div>
+      </form>
+    </ng-template>
+  </app-dialog>
+}

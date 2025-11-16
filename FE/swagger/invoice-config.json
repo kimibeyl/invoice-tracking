@@ -1,0 +1,13 @@
+{
+  "input": "swagger-exports/swagger-invoice.json",
+  "output": "../src/app/api",
+  "ignoreUnusedModels": false,
+  "module": "invoiceModule",
+  "servicePrefix": "invoice",
+  "defaultTag": "invoice",
+  "configuration": "invoiceApiConfiguration",
+  "baseService": "invoiceBaseService",
+  "response": "invoiceStrictHttpResponse",
+  "serviceIndex": "invoice-services",
+  "modelIndex": "invoice-models"
+}

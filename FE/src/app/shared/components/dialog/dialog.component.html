@@ -1,0 +1,42 @@
+<p-dialog
+  [header]="dialog().heading"
+  [modal]="true"
+  [visible]="true"
+  [closable]="false"
+  [draggable]="false"
+  [resizable]="false"
+  [closeOnEscape]="false"
+  [baseZIndex]="10000"
+  [style]="{ width: '600px'}"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+>
+  @if (template()) {
+    <div class="content-container">
+      <ng-container [ngTemplateOutlet]="template() ?? null"></ng-container>
+    </div>
+  }
+  <ng-template #footer>
+    @if (dialog().primary || dialog().secondary) {
+      <div class="button-container">
+        @if (dialog().secondary) {
+          <p-button
+            severity="secondary"
+            [label]="dialog().secondary"
+            (click)="secondaryActionChange.emit()"
+          >
+          </p-button>
+        }
+        @if (dialog().primary) {
+          <p-button
+            severity="primary"
+            [label]="dialog().primary"
+            [disabled]="disabled()"
+            [loading]="loading()"
+            (click)="primaryActionChange.emit()"
+          >
+          </p-button>
+        }
+      </div>
+    }
+  </ng-template>
+</p-dialog>

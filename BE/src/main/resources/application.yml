@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: invoice-tracking
+  datasource:
+    driverClassName: ${DS_DRIVER:org.postgresql.Driver}
+    url: jdbc:postgresql://localhost:5432/invoice_tracking}
+    username: ${DS_USERNAME:postgres_user}
+    password: ${DS_PASSWORD:8C:>0o0]Ib[m}
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  sql:
+    init:
+      mode: never
+logging:
+  level:
+    root: INFO
+server:
+  port: ${SERVER_PORT:8081}
+springdoc:
+  api-docs:
+    enabled: true
+    path: /invoice-system/v3/api-docs
+  swagger-ui:
+    path: /invoice-system/swagger-ui

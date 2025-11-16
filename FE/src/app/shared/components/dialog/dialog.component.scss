@@ -1,0 +1,11 @@
+.button-container {
+  display:flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.content-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100vh - 230px);
+}

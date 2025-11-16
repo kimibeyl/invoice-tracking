@@ -1,0 +1,16 @@
+<app-top-nav></app-top-nav>
+<p-splitter [panelSizes]="[10, 90]" class="splitter-height">
+  <ng-template #panel>
+    <p-listbox [options]="items()" optionLabel="label" listStyleClass="full-height" class="full-height">
+      <ng-template #item let-item>
+        <span [routerLink]="item.routerLink">{{item.label}}</span>
+      </ng-template>
+    </p-listbox>
+  </ng-template>
+  <ng-template #panel>
+    <div class="full-width">
+      <router-outlet></router-outlet>
+    </div>
+  </ng-template>
+</p-splitter>
+<p-toast />

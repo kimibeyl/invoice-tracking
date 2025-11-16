@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: 8C:>0o0]Ib[m
+      POSTGRES_DB: invoice_tracking
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  be:
+    build: BE/.
+    container_name: invoice-tracking-be
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/invoice_tracking
+      SPRING_DATASOURCE_USERNAME: postgres_user
+      SPRING_DATASOURCE_PASSWORD: 8C:>0o0]Ib[m
+    ports:
+      - "8080:8080"
+  fe:
+    build: FE/.
+    container_name: invoice-tracking-fe
+    depends_on:
+      - be
+    ports:
+      - "4200:80"
+    environment:
+      - API_URL=http://invoice-tracking-be:8080
+  volumes:
+    pgdata:

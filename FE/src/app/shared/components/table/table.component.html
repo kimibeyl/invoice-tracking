@@ -1,0 +1,134 @@
+<p-table
+  [columns]="cols()"
+  [value]="items()"
+  [scrollable]="false"
+  [lazy]="true"
+  [rows]="10"
+  [rowsPerPageOptions]="[5, 10, 20]"
+  [sortField]="sortField()"
+  [sortOrder]="sortOrder() || -1"
+  [dataKey]="cols()[0].field"
+  [resetPageOnSort]="true"
+  [totalRecords]="totalRecords()"
+  [selectionMode]="showCheckbox() ? 'multiple' : 'single'"
+  [(selection)]="selected"
+  [showCurrentPageReport]="true"
+  [paginator]="true"
+  (selectionChange)="onSelectionChange.emit($event)"
+  (onLazyLoad)="onLazyLoad.emit($event)"
+>
+  <ng-template #header let-columns>
+    <tr>
+      @if (showCheckbox() && selected().length > 0) {
+        <th><p-tableHeaderCheckbox /></th>
+        <th [attr.colspan]="columns.length + 1">
+          <div class="space-between">
+              Selected Item count: {{selected().length}}
+            <ng-container *ngTemplateOutlet="selectedItemsTemplate() ?? null"></ng-container>
+          </div>
+        </th>
+      } @else {
+      @if (showCheckbox()) {
+        <th></th>
+      }
+      @for (col of columns; track col) {
+          <th [pSortableColumn]="col.sortField">
+            {{ col.header }}
+            <p-sortIcon [field]="col.sortField"></p-sortIcon>
+
+          </th>
+      }
+      }
+    </tr>
+    <tr [formGroup]="inputForm()" class="search-row">
+      @if (showCheckbox()) {
+        <th class="p-0 bg-white"></th>
+      }
+      @for (col of columns; track col; let i = $index) {
+        <th class="p-0 bg-white white-space-nowrap">
+          @switch (col.type) {
+            @default {
+              <input
+                type="text"
+                [id]="'search_' + i"
+                pInputText
+                placeholder="Search"
+                [formControlName]="col.field"
+              />
+            }
+            @case (Filter.Chip) {
+                <p-select
+                  (click)="$event.stopPropagation()"
+                  [options]="col.items"
+                  appendTo="body"
+                  optionLabel="name"
+                  optionValue="value"
+                  placeholder="Search"
+                  [formControlName]="col.field"
+                >
+                </p-select>
+            }
+            @case (Filter.Dropdown) {
+                <p-select
+                  (click)="$event.stopPropagation()"
+                  [options]="col.items"
+                  [filter]="true"
+                  appendTo="body"
+                  optionLabel="name"
+                  optionValue="value"
+                  placeholder="Search"
+                  [formControlName]="col.field"
+                >
+                </p-select>
+            }
+            @case (Filter.Date) {
+                <p-date-picker
+                  (click)="$event.stopPropagation()"
+                  appendTo="body"
+                  placeholder="Search"
+                  [showIcon]="true"
+                  [iconDisplay]="'input'"
+                  [formControlName]="col.field"
+                >
+                </p-date-picker>
+            }
+          }
+        </th>
+      }
+    </tr>
+
+  </ng-template>
+  <ng-template #body let-rowData let-rowIndex="rowIndex" let-columns="columns">
+    <tr [pSelectableRow]="rowData">
+      @if (showCheckbox()) {
+        <td (click)="$event.stopPropagation()">
+          <p-tableCheckbox [value]="rowData" />
+        </td>
+      }
+      @if (loading()) {
+          @for (item of cols(); track item) {
+            <td><p-skeleton /></td>
+          }
+      } @else {
+      @for (col of columns; track col) {
+        <td (click)="onRowSelect.emit(rowData)">
+          @if (col.type == Filter.Chip) {
+              <p-tag [rounded]="true" [value]="rowData[col.field]" [severity]="rowData['severity']"></p-tag>
+          }
+            @else if (rowData[col.field]) {
+              {{
+                col.type == Filter.Date
+                  ? (rowData[col.field] | date: 'yyyy-MM-dd')
+                    : col.type == Filter.Currency
+                      ? (rowData[col.field] | currency: 'ZAR':'symbol':'1.2-2')
+                      : (rowData[col.field])
+              }}
+            } @else {
+              -
+            }
+        </td>
+      }
+      }
+    </tr>
+  </ng-template>
+</p-table>
