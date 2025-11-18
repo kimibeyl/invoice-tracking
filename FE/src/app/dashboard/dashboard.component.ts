@@ -4,11 +4,10 @@ import {Filter} from '~/shared/enums/filter';
 import {Card} from 'primeng/card';
 import {invoiceInvoiceTrackingApiService} from '~/api/services/invoice-invoice-tracking-api.service';
 import {Pageable} from '~/api/models/pageable';
-import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
-import {InvoiceSearchRequest} from '~/api/models/invoice-search-request';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {debounceTime} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {TableLazyLoadEvent, TableRowSelectEvent} from 'primeng/table';
+import {TableLazyLoadEvent} from 'primeng/table';
 import {Button} from 'primeng/button';
 import {InvoiceCreateRequest} from '~/api/models/invoice-create-request';
 import {MessageService} from 'primeng/api';
@@ -18,10 +17,9 @@ import {DatePicker} from 'primeng/datepicker';
 import {InputNumber} from 'primeng/inputnumber';
 import {Select} from 'primeng/select';
 import {DropDownOptions} from '~/shared/models/dropdown';
-import {DialogProperties} from '~/shared/models/dialog';
-import {updateInvoices} from '~/api/fn/invoice-tracking-api/update-invoices';
 import {ActivatedRoute} from '@angular/router';
 import {InvoiceResponse} from '~/api/models/invoice-response';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,8 +35,7 @@ import {InvoiceResponse} from '~/api/models/invoice-response';
     Select
   ],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss',
-  providers: [MessageService]
+  providers: [MessageService, DatePipe]
 })
 export class DashboardComponent implements OnInit {
   invoiceInvoiceTrackingApiService = inject(invoiceInvoiceTrackingApiService);
@@ -46,18 +43,19 @@ export class DashboardComponent implements OnInit {
   destroyRef = inject(DestroyRef);
   messageService = inject(MessageService);
   activateRoute = inject(ActivatedRoute);
+  datePipe = inject(DatePipe);
 
   cols = signal([
     {
-      field: 'billingAccountName',
-      header: 'Account Holder name',
+      field: 'invoiceNumber',
+      header: 'Invoice Number',
       type: Filter.Input,
-      sortField: 'billingAccount.name'
+      sortField: 'invoiceNumber'
     },
     {
       field: 'invoiceDate',
       header: 'Payment due date',
-      type: Filter.Input,
+      type: Filter.Date,
       sortField: 'invoiceDate'
     },
     {
@@ -99,6 +97,7 @@ export class DashboardComponent implements OnInit {
     secondary: 'Cancel'
   }
   ));
+  billingAccountId = signal('')
 
   searchForm = this.fb.group({
     billingAccountId: this.fb.control<string | undefined>(undefined),
@@ -111,10 +110,10 @@ export class DashboardComponent implements OnInit {
   });
 
   createInvoiceForm = this.fb.group({
-    invoiceNumber: this.fb.control<string | undefined>(undefined),
-    invoiceDate: this.fb.control<string | undefined>(undefined),
-    amount: this.fb.control<number | undefined>(undefined),
-    vatAmount: this.fb.control<number | undefined | null>(undefined),
+    invoiceNumber: this.fb.control<string>('', [Validators.required]),
+    invoiceDate: this.fb.control<string>('', [Validators.required]),
+    amount: this.fb.control<number>(0, [Validators.required]),
+    vatAmount: this.fb.control<number>(0, [Validators.required]),
     status: this.fb.control<string>('PENDING')
   })
 
@@ -155,31 +154,26 @@ export class DashboardComponent implements OnInit {
       }))
       this.searchInvoices(this.tableEvent());
     });
+    this.activateRoute.paramMap.subscribe((params) => {
+      this.searchForm.patchValue({
+        billingAccountId: params.get('id') ?? undefined
+      });
+      this.billingAccountId.set(params.get('id') ?? '');
+    });
   }
 
   searchInvoices($event: TableLazyLoadEvent) {
-    if(!this.searchForm.value.billingAccountId) {
-      this.activateRoute.paramMap.subscribe((params) => {
-        this.searchForm.patchValue({
-          billingAccountId: params.get('id') ?? undefined
-        });
-      });
-    }
-    console.log('$event', $event)
-
     const order = $event.sortOrder && $event.sortOrder > 0 ? 'asc' : 'desc';
     const sort: string[] = []
     if ($event.sortField && typeof $event.sortField === 'string') {
       sort.push($event.sortField)
       sort.push(order)
     }
-    console.log('here', this.pageable())
-
     this.pageable.update(currentValue => ({
       ...currentValue,
       page: ($event.first || 0) / ($event?.rows || 1),
       size: $event.rows || 10,
-      sort: []
+      sort: sort
     }))
     const formValues = Object.fromEntries(Object.entries(this.searchForm.value).map(([k, v]) => [k, v ?? undefined]));
     this.invoiceInvoiceTrackingApiService.searchInvoices({
@@ -190,12 +184,9 @@ export class DashboardComponent implements OnInit {
       if(result.content) {
         this.items.set(result.content.map(item => (
           {...item,
-            invoiceDate: new Date(item.invoiceDate || '').toISOString().split('T')[0],
             severity: item.status == 'PAID' ? 'success' : item.status == 'UNPAID' ? 'warn' : 'danger'
           })))
         this.loading.update(currentValue => false)
-        console.log('here', result.content)
-
       }
     }, error: (error) => {
       this.loading.update(currentValue => false)
@@ -205,7 +196,10 @@ export class DashboardComponent implements OnInit {
 
   createInvoice() {
     this.createInvoiceLoading.set(true);
-    this.invoiceInvoiceTrackingApiService.createInvoices({body: this.createInvoiceForm.getRawValue() as InvoiceCreateRequest})
+    const formatted = this.datePipe.transform(this.createInvoiceForm.getRawValue().invoiceDate, "yyyy-MM-dd'T'HH:mm:ss");
+    const invoiceItem = {...this.createInvoiceForm.getRawValue(),billingAccountId: this.billingAccountId(), invoiceDate: formatted};
+
+    this.invoiceInvoiceTrackingApiService.createInvoices({body: invoiceItem as InvoiceCreateRequest})
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (result) => {
@@ -217,13 +211,12 @@ export class DashboardComponent implements OnInit {
           this.createInvoiceLoading.set(true);
         }, complete: () => {
           this.createInvoiceLoading.set(false);
+          this.openInvoiceDialog.set(false);
         }
       })
     }
 
   editInvoice($event: InvoiceResponse) {
-    console.log('$event',  $event.invoiceDate)
-
     this.createInvoiceForm.patchValue({
       invoiceNumber: $event.invoiceNumber,
       invoiceDate: new Date($event.invoiceDate || '').toISOString().split('T')[0],
@@ -231,13 +224,17 @@ export class DashboardComponent implements OnInit {
       vatAmount: $event.vatAmount,
       status: $event.status
     })
+    this.createInvoiceForm.get('invoiceNumber')?.disable()
     this.createInvoiceOption.set(false)
     this.openInvoiceDialog.set(true)
   }
 
   updateInvoice() {
     this.createInvoiceLoading.set(true);
-    this.invoiceInvoiceTrackingApiService.updateInvoices({body: this.createInvoiceForm.getRawValue() as InvoiceCreateRequest})
+    const formatted = this.datePipe.transform(this.createInvoiceForm.getRawValue().invoiceDate, "yyyy-MM-dd'T'HH:mm:ss");
+    const invoiceItem = {...this.createInvoiceForm.getRawValue(),billingAccountId: this.billingAccountId(), invoiceDate: formatted};
+    //tinqa5
+    this.invoiceInvoiceTrackingApiService.updateInvoices({body: invoiceItem as InvoiceCreateRequest})
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (result) => {
@@ -249,7 +246,15 @@ export class DashboardComponent implements OnInit {
           this.createInvoiceLoading.set(true);
         }, complete: () => {
           this.createInvoiceLoading.set(false);
+          this.openInvoiceDialog.set(false);
         }
       })
+  }
+
+  openCreateNewDialog() {
+    this.createInvoiceForm.get('invoiceNumber')?.enable()
+    this.createInvoiceForm.reset();
+    this.openInvoiceDialog.set(true);
+    this.createInvoiceOption.set(true);
   }
 }

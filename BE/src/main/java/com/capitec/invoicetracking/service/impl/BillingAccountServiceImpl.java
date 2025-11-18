@@ -2,7 +2,7 @@ package com.capitec.invoicetracking.service.impl;
 
 import com.capitec.invoicetracking.domain.entity.BillingAccount;
 import com.capitec.invoicetracking.domain.repository.BillingAccountRepository;
-import com.capitec.invoicetracking.model.request.BillingAccountSearch;
+import com.capitec.invoicetracking.model.request.BillingAccountSearchRequest;
 import com.capitec.invoicetracking.service.BillingAccountService;
 import jakarta.persistence.criteria.Predicate;
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +22,7 @@ public class BillingAccountServiceImpl implements BillingAccountService {
     }
 
     @Override
-    public Page<BillingAccount> searchAccountHolders(Pageable pageable, BillingAccountSearch request) {
+    public Page<BillingAccount> searchAccountHolders(Pageable pageable, BillingAccountSearchRequest request) {
         return billingAccountRepository.findAll((root, query, cb) -> {
 
             List<Predicate> predicates = new ArrayList<>();

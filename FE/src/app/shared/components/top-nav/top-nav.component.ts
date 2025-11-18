@@ -57,4 +57,9 @@ export class TopNavComponent implements OnInit {
   navigateToNotifications() {
     this.router.navigate(['notifications'])
   }
+
+  logout() {
+    localStorage.removeItem('token')
+    this.router.navigate(['auth'])
+  }
 }

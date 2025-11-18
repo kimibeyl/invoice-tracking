@@ -1,0 +1,10 @@
+<div class="container full-height">
+<p-card [header]="'Login'" [style]="{maxWidth: '50rem'}">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col">
+  <app-input [control]="$any(loginForm.controls['username'])" placeholder="Email address" errorMessage="Email is invalid"></app-input>
+  <p-password formControlName="password" placeholder="Password"/>
+   <p-button type="submit" severity="primary" [disabled]="loginForm.invalid">Login</p-button>
+</form>
+</p-card>
+</div>
+<p-toast />

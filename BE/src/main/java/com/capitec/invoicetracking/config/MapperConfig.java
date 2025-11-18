@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Not;
 import org.modelmapper.Conditions;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -33,21 +32,18 @@ public class MapperConfig {
     public ModelMapper modelMapper() {
         var modelMapper = new ModelMapper();
 
-        // Configure epoch seconds to LocalDateTime converter
         Converter<Long, LocalDateTime> epochToLocalDateTime = context -> {
             Long epochSeconds = context.getSource();
             if (epochSeconds == null) return null;
             return LocalDateTime.ofInstant(Instant.ofEpochSecond(epochSeconds), ZoneId.systemDefault());
         };
 
-        // Configure LocalDateTime to epoch seconds converter
         Converter<LocalDateTime, Long> localDateTimeToEpoch = context -> {
             LocalDateTime dateTime = context.getSource();
             if (dateTime == null) return null;
             return dateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
         };
 
-        // Register the converters
         modelMapper.addConverter(epochToLocalDateTime);
         modelMapper.addConverter(localDateTimeToEpoch);
 

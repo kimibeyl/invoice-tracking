@@ -1,0 +1,14 @@
+<app-top-nav></app-top-nav>
+<p-splitter [panelSizes]="[10, 90]" class="splitter-height">
+  <ng-template #panel>
+    <p-menu [model]="items()" class="full-height" styleClass="full-height">
+    </p-menu>
+  </ng-template>
+  <ng-template #panel>
+    <p-button [text]="true" icon="pi pi-home" routerLink="/" />
+    <div class="full-width">
+      <router-outlet></router-outlet>
+    </div>
+  </ng-template>
+</p-splitter>
+<p-toast />

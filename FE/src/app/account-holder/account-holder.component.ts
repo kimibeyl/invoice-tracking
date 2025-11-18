@@ -6,7 +6,7 @@ import {Pageable} from '~/api/models/pageable';
 import {FormBuilder} from '@angular/forms';
 import {debounceTime} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {TableLazyLoadEvent, TableRowSelectEvent} from 'primeng/table';
+import {TableLazyLoadEvent} from 'primeng/table';
 import {invoiceBillingAccountApiService} from '~/api/services/invoice-billing-account-api.service';
 import {BillingAccountResponse} from '~/api/models/billing-account-response';
 import {Router} from '@angular/router';
@@ -19,8 +19,7 @@ import {Button} from 'primeng/button';
     Card,
     Button
   ],
-  templateUrl: './account-holder.component.html',
-  styleUrl: './account-holder.component.scss'
+  templateUrl: './account-holder.component.html'
 })
 export class AccountHolderComponent implements OnInit {
   invoiceBilling = inject(invoiceBillingAccountApiService);
@@ -92,16 +91,12 @@ export class AccountHolderComponent implements OnInit {
   }
 
   searchAccountHolders($event: TableLazyLoadEvent) {
-    console.log('$event', $event)
-
     const order = $event.sortOrder && $event.sortOrder > 0 ? 'asc' : 'desc';
     const sort: string[] = []
     if ($event.sortField && typeof $event.sortField === 'string') {
       sort.push($event.sortField)
       sort.push(order)
     }
-    console.log('here', this.pageable())
-
     this.pageable.update(currentValue => ({
       ...currentValue,
       page: ($event.first || 0) / ($event?.rows || 1),
@@ -109,7 +104,6 @@ export class AccountHolderComponent implements OnInit {
       sort: []
     }))
     const formValues = Object.fromEntries(Object.entries(this.searchForm.value).map(([k, v]) => [k, v ?? undefined]));
-    console.log('here', this.pageable())
     this.invoiceBilling.searchAccount({
       pageable: this.pageable(),
       body: formValues

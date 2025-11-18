@@ -9,6 +9,8 @@ import { invoiceApiConfiguration, invoiceApiConfigurationParams } from './invoic
 import { invoiceInvoiceTrackingApiService } from './services/invoice-invoice-tracking-api.service';
 import { invoiceNotificationApiService } from './services/invoice-notification-api.service';
 import { invoiceBillingAccountApiService } from './services/invoice-billing-account-api.service';
+import { invoiceAuthenticationApiService } from './services/invoice-authentication-api.service';
+import { invoicePingControllerService } from './services/invoice-ping-controller.service';
 
 /**
  * Module that provides all services and configuration.
@@ -21,6 +23,8 @@ import { invoiceBillingAccountApiService } from './services/invoice-billing-acco
     invoiceInvoiceTrackingApiService,
     invoiceNotificationApiService,
     invoiceBillingAccountApiService,
+    invoiceAuthenticationApiService,
+    invoicePingControllerService,
     invoiceApiConfiguration
   ],
 })

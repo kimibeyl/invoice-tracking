@@ -3,18 +3,29 @@ import {definePreset} from '@primeuix/themes';
 
 export const MyPreset = definePreset(Lara, {
   semantic: {
+    primary: {
+      50: '#f3f3f3',
+      100: '#3A3A3A',
+      200: '#f3f3f3',
+      300: '#E51718',
+      400: '#4111A4',
+      500: '#2F70EF',
+      600: '#418fde'
+    },
     colorScheme: {
       light: {
+        surface: {
+          100: '{primary.50}',
+          800: '#000'
+        },
         primary: {
-          50: '#f3f3f3',
-          100: '#3A3A3A',
-          300: '#E51718',
-          400: '#4111A4',
-          500: '#2F70EF',
-          600: '#418fde'
+          color: '{primary.400}',
+          inverseColor: '#ffffff',
+          hoverColor: '{zinc.900}',
+          activeColor: '{zinc.800}'
         },
         highlight: {
-          background: '{primary.100}',
+          background: '{primary.300}',
           focusBackground: '{primary.300}',
           color: '#ffffff',
           focusColor: '#ffffff'
@@ -32,6 +43,15 @@ export const MyPreset = definePreset(Lara, {
               }
             }
           }
+      }
+    },
+    inputtext: {
+      colorScheme: {
+        light: {
+          root: {
+            focusBorderColor: '{primary.100}'
+          }
+        }
       }
     },
     menubar: {

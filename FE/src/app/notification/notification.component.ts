@@ -14,6 +14,9 @@ import {Button} from 'primeng/button';
 import {MessageService} from 'primeng/api';
 import {DialogComponent} from '~/shared/components/dialog/dialog.component';
 import {InputText} from 'primeng/inputtext';
+import {invoiceInvoiceTrackingApiService} from '~/api/services/invoice-invoice-tracking-api.service';
+import {InvoiceResponse} from '~/api/models/invoice-response';
+import {Skeleton} from 'primeng/skeleton';
 
 @Component({
   selector: 'app-notification',
@@ -25,6 +28,7 @@ import {InputText} from 'primeng/inputtext';
     FormsModule,
     InputText,
     ReactiveFormsModule,
+    Skeleton,
   ],
   templateUrl: './notification.component.html',
   providers: [MessageService]
@@ -35,6 +39,9 @@ export class NotificationComponent implements OnInit {
   destroyRef = inject(DestroyRef);
   router = inject(Router);
   messageService = inject(MessageService)
+  invoiceInvoiceTrackingApiService = inject(invoiceInvoiceTrackingApiService);
+  loadingInvoice = signal<boolean>(false);
+  selectedInvoice = signal<InvoiceResponse[]>([]);
   cols = signal([
     {
       field: 'invoiceNumber',
@@ -100,7 +107,7 @@ export class NotificationComponent implements OnInit {
   dialog = computed(() => ({
       heading: 'View Invoice',
       primary: '',
-      secondary: 'Cancel'
+      secondary: 'Close'
     }
   ));
 
@@ -110,7 +117,7 @@ export class NotificationComponent implements OnInit {
     message: this.fb.control<string | undefined>(undefined),
     createdAt: this.fb.control<string | undefined>(undefined),
     type: this.fb.control<string | undefined>(undefined),
-    status: this.fb.control<string>('READ'),
+    status: this.fb.control<string>('UNREAD'),
 
   });
   selected = signal<NotificationResponse[]>([]);
@@ -179,8 +186,10 @@ export class NotificationComponent implements OnInit {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (result) => {
+            ids.forEach(id => this.items.update(currentValue => currentValue.filter(item => item.notificationId !== id)))
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Marked as read'})
           }, error: (error) => {
+
             this.loading.update(currentValue => false)
             this.messageService.add({severity: 'error', summary: 'Error', detail: 'Cannot mark as read'})
           },
@@ -190,8 +199,26 @@ export class NotificationComponent implements OnInit {
         })
     }
   }
-  navigateToInvoice($event: NotificationResponse) {
-    let item = this.items().find((value: NotificationResponse) =>  $event.invoiceNumber == value.invoiceNumber)
-    this.openInvoiceDialog.set(true)
+  getInvoiceDetails($event: NotificationResponse) {
+    if ($event?.invoiceId) {
+      this.loadingInvoice.set(true);
+      let item: InvoiceResponse | undefined = this.selectedInvoice().find((value: InvoiceResponse) => $event.invoiceId == value.invoiceId)
+      if (!item) {
+          this.invoiceInvoiceTrackingApiService.getInvoice({invoiceId: $event?.invoiceId})
+            .pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: (result) => {
+              this.selectedInvoice.update(currentValue => [...currentValue, result])
+              this.createInvoiceForm.patchValue(result)
+              this.loadingInvoice.set(false)
+            }, error: (error) => {
+              this.loadingInvoice.set(false)
+            }
+          })
+      } else {
+        this.createInvoiceForm.patchValue(item)
+      }
+      this.createInvoiceForm.disable()
+      this.openInvoiceDialog.set(true)
+    }
   }
 }

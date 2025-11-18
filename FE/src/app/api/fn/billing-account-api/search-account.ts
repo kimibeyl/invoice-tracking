@@ -8,13 +8,13 @@ import { filter, map } from 'rxjs/operators';
 import { invoiceStrictHttpResponse } from '../../invoice-strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { BillingAccountSearch } from '../../models/billing-account-search';
+import { BillingAccountSearchRequest } from '../../models/billing-account-search-request';
 import { Pageable } from '../../models/pageable';
 import { PageBillingAccountResponse } from '../../models/page-billing-account-response';
 
 export interface SearchAccount$Params {
   pageable: Pageable;
-      body: BillingAccountSearch
+      body: BillingAccountSearchRequest
 }
 
 export function searchAccount(http: HttpClient, rootUrl: string, params: SearchAccount$Params, context?: HttpContext): Observable<invoiceStrictHttpResponse<PageBillingAccountResponse>> {

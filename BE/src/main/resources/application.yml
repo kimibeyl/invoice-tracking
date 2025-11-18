@@ -4,7 +4,7 @@ spring:
   datasource:
     driverClassName: ${DS_DRIVER:org.postgresql.Driver}
     url: jdbc:postgresql://localhost:5432/invoice_tracking}
-    username: ${DS_USERNAME:postgres_user}
+    username: ${DS_USERNAME:postgres}
     password: ${DS_PASSWORD:8C:>0o0]Ib[m}
   flyway:
     enabled: true
@@ -29,3 +29,5 @@ springdoc:
     path: /invoice-system/v3/api-docs
   swagger-ui:
     path: /invoice-system/swagger-ui
+auth:
+  token: ${AUTH_TOKEN:CAPITEC_JWT_AUTHENTICATION_SECRET}

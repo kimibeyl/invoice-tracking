@@ -1,6 +1,5 @@
 package com.capitec.invoicetracking.schedule;
 
-
 import com.capitec.invoicetracking.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

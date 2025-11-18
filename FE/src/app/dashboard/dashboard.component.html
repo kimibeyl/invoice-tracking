@@ -1,12 +1,13 @@
 <div class="container">
 <p-card header="Invoice">
   <div class="button-container">
-    <p-button rounded label="Create Invoice" icon="pi pi-plus" (click)="openInvoiceDialog.set(true); this.createInvoiceOption.set(true)"></p-button>
+    <p-button rounded label="Create Invoice" icon="pi pi-plus" (click)="openCreateNewDialog()"></p-button>
   </div>
   <app-table
     [items]="items()"
     [cols]="cols()"
     [loading]="loading()"
+    [totalRecords]="totalRecords()"
     [inputForm]="searchForm"
     (onLazyLoad)="searchInvoices($event)"
     (onRowSelect)="editInvoice($event)"
@@ -14,7 +15,7 @@
 </p-card>
 </div>
 @if(openInvoiceDialog()) {
-  <app-dialog [dialog]="dialog()" (primaryActionChange)="this.createInvoiceOption() ? createInvoice() : updateInvoice()" (secondaryActionChange)="openInvoiceDialog.set(false)" [template]="invoiceFormTemplate" [disabled]="createInvoiceForm.invalid" [loading]="createInvoiceLoading()">
+  <app-dialog [dialog]="dialog()" (primaryActionChange)="createInvoiceOption() ? createInvoice() : updateInvoice()" (secondaryActionChange)="openInvoiceDialog.set(false)" [template]="invoiceFormTemplate" [disabled]="createInvoiceForm.invalid" [loading]="createInvoiceLoading()">
     <ng-template #invoiceFormTemplate>
       <form [formGroup]="createInvoiceForm">
         <div class="form-group">

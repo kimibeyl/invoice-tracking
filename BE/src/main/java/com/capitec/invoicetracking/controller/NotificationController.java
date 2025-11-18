@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.capitec.invoicetracking.domain.entity.Notification;
 import org.springframework.data.domain.Page;
@@ -18,8 +19,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/v1/notification/")
-@CrossOrigin(origins = "http://localhost:4200")
 @Tag(name = "Notification API", description = "API to manage notifications")
 public class NotificationController {
     private final NotificationService notificationService;

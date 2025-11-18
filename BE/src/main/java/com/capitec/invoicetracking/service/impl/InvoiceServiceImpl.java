@@ -23,12 +23,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -112,7 +110,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
         invoice = new Invoice();
-        invoice.setCreatedAt(Instant.now().getEpochSecond());
+        invoice.setInvoiceDate(Instant.now().getEpochSecond());
         invoice.setInvoiceNumber(request.getInvoiceNumber());
         invoice.setAmount(request.getAmount());
         invoice.setVatAmount(request.getVatAmount());

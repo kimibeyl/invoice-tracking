@@ -1,6 +1,5 @@
 package com.capitec.invoicetracking.model.response;
 
-import com.capitec.invoicetracking.domain.entity.BillingAccount;
 import com.capitec.invoicetracking.enums.InvoiceStatus;
 import lombok.Data;
 

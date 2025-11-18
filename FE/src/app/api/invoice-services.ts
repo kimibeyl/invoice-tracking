@@ -5,3 +5,5 @@
 export { invoiceInvoiceTrackingApiService } from './services/invoice-invoice-tracking-api.service';
 export { invoiceNotificationApiService } from './services/invoice-notification-api.service';
 export { invoiceBillingAccountApiService } from './services/invoice-billing-account-api.service';
+export { invoiceAuthenticationApiService } from './services/invoice-authentication-api.service';
+export { invoicePingControllerService } from './services/invoice-ping-controller.service';

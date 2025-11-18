@@ -6,7 +6,6 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
@@ -15,7 +14,6 @@ import java.io.IOException;
 
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
-@Profile({"!spring-cloud"})
 @Component
 @Order(HIGHEST_PRECEDENCE)
 public class SimpleCorsFilter extends GenericFilterBean {

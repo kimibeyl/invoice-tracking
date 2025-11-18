@@ -27,6 +27,7 @@ import {DatePicker} from 'primeng/datepicker';
   templateUrl: './table.component.html'
 })
 export class TableComponent {
+  colId = input<string | null>(null);
   items: InputSignal<any[]> = input<any[]>([]);
   cols: InputSignal<Column[]> = input<Column[]>([{} as Column]);
   loading: InputSignal<boolean> = input<boolean>(false);

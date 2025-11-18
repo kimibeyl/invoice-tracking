@@ -7,7 +7,7 @@
   [rowsPerPageOptions]="[5, 10, 20]"
   [sortField]="sortField()"
   [sortOrder]="sortOrder() || -1"
-  [dataKey]="cols()[0].field"
+  [dataKey]="cols()[0].field || colId() || ''"
   [resetPageOnSort]="true"
   [totalRecords]="totalRecords()"
   [selectionMode]="showCheckbox() ? 'multiple' : 'single'"
@@ -102,7 +102,7 @@
     <tr [pSelectableRow]="rowData">
       @if (showCheckbox()) {
         <td (click)="$event.stopPropagation()">
-          <p-tableCheckbox [value]="rowData" />
+          <p-tableCheckbox [value]="rowData" [disabled]="rowData['severity'] == 'success'" />
         </td>
       }
       @if (loading()) {

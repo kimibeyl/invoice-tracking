@@ -3,21 +3,24 @@
     <img ngSrc="/assets/Logo.svg" alt="capitec" height="50" width="120"/>
   </ng-template>
   <ng-template #end>
-    <p-overlaybadge [value]="notifications().numberOfElements">
+    <div class="flex">
+      <p-button label="logout" icon="pi pi-sign-out" (click)="logout()"/>
+    <p-overlaybadge [value]="notifications().totalElements">
       <p-button severity="primary" [rounded]="true" [text]="true"  icon="pi pi-bell" (click)="op.toggle($event)"></p-button>
     </p-overlaybadge>
+    </div>
     <p-popover #op>
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col">
         <div>
-          <span class="font-medium block mb-2">Notifications</span>
-          <ul class="list-none p-0 m-0 flex flex-col">
+          <span>Notifications</span>
+          <ul>
             @for(notification of notifications()?.content; track notification.notificationId) {
-              <li class="flex items-center gap-2 px-2 py-3 hover:bg-emphasis cursor-pointer rounded-border">
+              <li>
                 <span>{{ notification.message }}</span>
               </li>
             }
           </ul>
-          <p-button label="View all" class="mt-2" (click)="navigateToNotifications(); op.toggle($event)"></p-button>
+          <p-button label="View all" (click)="navigateToNotifications(); op.toggle($event)"></p-button>
         </div>
       </div>
     </p-popover>

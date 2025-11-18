@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
   be:
     build: BE/.
     container_name: invoice-tracking-be
@@ -29,6 +29,4 @@ services:
     ports:
       - "4200:80"
     environment:
-      - API_URL=http://invoice-tracking-be:8080
-  volumes:
-    pgdata:
+      - apiUrl=http://invoice-tracking-be:8080

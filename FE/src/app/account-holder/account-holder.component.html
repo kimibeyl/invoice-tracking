@@ -1,8 +1,5 @@
 <div class="container">
   <p-card header="Account Holder">
-    <div class="button-container">
-      <p-button label="Create New account holder" icon="pi pi-plus" (click)="openAccountHolderDialog.set(true); this.createAccountOption.set(true)"></p-button>
-    </div>
   <app-table
     [items]="items()"
     [cols]="cols()"

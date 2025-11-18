@@ -1,8 +1,12 @@
 import { Routes } from '@angular/router';
+import {authGuard} from '~/guards/AuthGuard';
+import {authenticationRoutes} from '~/authentication/authentication.routes';
 
 export const routes: Routes = [
   {
     path: '',
+    canActivate: [authGuard],
+    loadComponent: () => import('./layout/layout.component').then((c) => c.LayoutComponent),
     children: [
       {
         path: '',
@@ -16,5 +20,7 @@ export const routes: Routes = [
         path: 'notifications',
         loadComponent: () => import('./notification/notification.component').then(m => m.NotificationComponent)
       }
-    ]
-  }]
+    ],
+  },
+  ...authenticationRoutes,
+]
