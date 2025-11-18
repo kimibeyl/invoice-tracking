@@ -1,5 +1,5 @@
 FROM eclipse-temurin:17-jdk
-LABEL authors="kimberleymyburgh"
+LABEL authors="kimberleighmyburg"
 
 FROM gradle:8.9-jdk17 AS builder
 WORKDIR /home/gradle/project

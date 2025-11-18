@@ -1,5 +1,5 @@
-FROM node:20-3.21 AS build
-LABEL authors="kimberleymyburgh"
+FROM node:20 AS build
+LABEL authors="kimberleighmyburg"
 
 WORKDIR /app
 COPY package*.json ./
