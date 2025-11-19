@@ -35,8 +35,8 @@ The recommended way to run the entire application (backend, frontend, and databa
 ### 1. Clone the Repository
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
-cd <YOUR_PROJECT_DIRECTORY>
+git clone https://github.com/kimibeyl/invoice-tracking.git
+cd invoice-tracking
 ```
 
 ### 2. Configure Environment
