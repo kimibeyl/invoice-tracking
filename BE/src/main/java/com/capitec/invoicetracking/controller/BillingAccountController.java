@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @PreAuthorize("hasRole('ADMIN')")
-@RequestMapping("/api/v1/billing/")
+@RequestMapping("/api/v1/billing")
 @Tag(name = "Billing Account API", description = "API to manage account holders")
 public class BillingAccountController {
     private final BillingAccountService billingService;
@@ -29,8 +29,7 @@ public class BillingAccountController {
 
     @Operation(summary = "Retrieves a paginating list of account holders.", description = "Returns account holder paginated summary.")
     @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<BillingAccountResponse>> searchAccount(Pageable pageable,
-                                                               @RequestBody BillingAccountSearchRequest searchRequest) {
+    public ResponseEntity<Page<BillingAccountResponse>> searchAccount(@RequestBody BillingAccountSearchRequest searchRequest,Pageable pageable) {
 
         Page<BillingAccount> pagedAccount = billingService.searchAccountHolders(pageable, searchRequest);
 

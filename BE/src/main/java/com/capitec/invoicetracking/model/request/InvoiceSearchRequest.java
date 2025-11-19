@@ -9,11 +9,11 @@ import java.util.UUID;
 
 @Data
 public class InvoiceSearchRequest {
-    UUID invoiceId;
-    String accountName;
-    UUID billingAccountId;
-    String invoiceNumber;
-    LocalDateTime invoiceDate;
-    InvoiceStatus[] status;
-    BigDecimal amount;
+    private UUID invoiceId;
+    private String accountName;
+    private UUID billingAccountId;
+    private String invoiceNumber;
+    private LocalDateTime invoiceDate;
+    private InvoiceStatus[] status;
+    private BigDecimal amount;
 }

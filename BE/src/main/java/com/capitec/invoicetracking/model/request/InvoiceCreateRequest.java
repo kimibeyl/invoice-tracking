@@ -9,10 +9,10 @@ import java.util.UUID;
 
 @Data
 public class InvoiceCreateRequest {
-    String invoiceNumber;
-    LocalDateTime invoiceDate;
-    InvoiceStatus status;
-    BigDecimal amount;
-    BigDecimal vatAmount;
-    UUID billingAccountId;
+    private String invoiceNumber;
+    private LocalDateTime invoiceDate;
+    private InvoiceStatus status;
+    private BigDecimal amount;
+    private BigDecimal vatAmount;
+    private UUID billingAccountId;
 }

@@ -9,13 +9,13 @@ import java.util.UUID;
 
 @Data
 public class NotificationResponse {
-    UUID notificationId;
-    NotificationType type;
-    String accountName;
-    String message;
-    UUID invoiceId;
-    String invoiceNumber;
-    LocalDateTime invoiceDate;
-    NotificationStatus status;
-    LocalDateTime createdAt;
+    private UUID notificationId;
+    private NotificationType type;
+    private String accountName;
+    private String message;
+    private UUID invoiceId;
+    private String invoiceNumber;
+    private LocalDateTime invoiceDate;
+    private NotificationStatus status;
+    private LocalDateTime createdAt;
 }

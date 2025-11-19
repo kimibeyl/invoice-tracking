@@ -23,7 +23,7 @@ public class Notification extends AbstractBaseEntity {
     @Column(name = "type")
     private NotificationType type = NotificationType.GENERAL;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "invoice_id", nullable = false)
     private Invoice invoice;
 

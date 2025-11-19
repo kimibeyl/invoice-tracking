@@ -6,9 +6,9 @@ import java.util.UUID;
 
 @Data
 public class BillingAccountResponse {
-    UUID billingAccId;
-    String name;
-    String address;
-    String phone;
-    String email;
+    private UUID billingAccId;
+    private String name;
+    private String address;
+    private String phone;
+    private String email;
 }

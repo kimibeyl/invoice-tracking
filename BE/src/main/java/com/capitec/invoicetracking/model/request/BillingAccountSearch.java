@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class BillingAccountSearch {
-    String name;
-    String address;
-    String phone;
-    String email;
+    private String name;
+    private String address;
+    private String phone;
+    private String email;
 }

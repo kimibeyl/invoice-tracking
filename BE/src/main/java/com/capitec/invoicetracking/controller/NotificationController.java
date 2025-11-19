@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @RestController
 @PreAuthorize("hasRole('ADMIN')")
-@RequestMapping("/api/v1/notification/")
+@RequestMapping("/api/v1/notification")
 @Tag(name = "Notification API", description = "API to manage notifications")
 public class NotificationController {
     private final NotificationService notificationService;

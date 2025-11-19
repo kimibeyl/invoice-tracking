@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @RestController
 @PreAuthorize("hasRole('ADMIN')")
-@RequestMapping("/api/v1/invoice/")
+@RequestMapping("/api/v1/invoice")
 @Tag(name = "Invoice Tracking API", description = "API to manage invoices")
 public class InvoiceController {
     private final InvoiceService invoiceService;
@@ -42,9 +42,8 @@ public class InvoiceController {
 
     @Operation(summary = "Retrieves a paginating list of invoices.", description = "Returns invoice paginated summary.")
     @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<InvoiceResponse>> searchInvoices(Pageable pageable,
-                                                                @RequestBody InvoiceSearchRequest searchRequest,
-                                                                @RequestParam(required = false) Boolean unPaged) {
+    public ResponseEntity<Page<InvoiceResponse>> searchInvoices(@RequestBody InvoiceSearchRequest searchRequest,
+                                                                @RequestParam(required = false) Boolean unPaged, Pageable pageable) {
         if (Boolean.TRUE.equals(unPaged)) {
             pageable = PageRequest.of(0, 10000);
         }

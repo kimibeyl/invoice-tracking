@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 
 @Data
 public class NotificationSearchRequest {
-    String message;
-    String accountId;
-    NotificationType type;
-    NotificationStatus status;
-    LocalDateTime fromDate;
-    LocalDateTime toDate;
+    private String message;
+    private String accountId;
+    private NotificationType type;
+    private NotificationStatus status;
+    private LocalDateTime fromDate;
+    private LocalDateTime toDate;
 }

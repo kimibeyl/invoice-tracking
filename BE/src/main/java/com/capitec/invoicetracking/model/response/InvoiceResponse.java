@@ -9,15 +9,15 @@ import java.util.UUID;
 
 @Data
 public class InvoiceResponse {
-    UUID invoiceId;
-    String invoiceNumber;
-    UUID billingAccountId;
-    String billingAccountNumber;
-    String billingAccountName;
-    String billingAccountAddress;
-    String billingAccountEmail;
-    LocalDateTime invoiceDate;
-    InvoiceStatus status;
-    BigDecimal amount;
-    BigDecimal vatAmount;
+    private UUID invoiceId;
+    private String invoiceNumber;
+    private UUID billingAccountId;
+    private String billingAccountNumber;
+    private String billingAccountName;
+    private String billingAccountAddress;
+    private String billingAccountEmail;
+    private LocalDateTime invoiceDate;
+    private InvoiceStatus status;
+    private BigDecimal amount;
+    private BigDecimal vatAmount;
 }
