@@ -117,3 +117,11 @@ Migration scripts are located in the backend project, typically under `src/main/
 Scripts are named following the convention: `V<VERSION>.sql` (e.g., `V1.0.0.sql`).
 
 The Spring Boot application automatically runs pending migrations on startup.
+
+## Login details
+
+Username: `test@domain.com`
+Password: `tinqa5`
+
+## Diagram
+[<img src="docs/thumbnail.png" width="200"/>](Documentation/Blank diagram.pdf)
