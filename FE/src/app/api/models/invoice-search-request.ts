@@ -9,5 +9,7 @@ export interface InvoiceSearchRequest {
   invoiceDate?: string;
   invoiceId?: string;
   invoiceNumber?: string;
-  status?: Array<'PENDING' | 'PAID' | 'UNPAID' | 'DUE' | 'OVER_DUE' | 'CANCELLED'>;
+  status?: Array<
+    "PENDING" | "PAID" | "UNPAID" | "DUE" | "OVER_DUE" | "CANCELLED"
+  >;
 }

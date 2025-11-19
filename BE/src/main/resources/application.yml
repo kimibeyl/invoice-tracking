@@ -1,11 +1,13 @@
 spring:
+  profile:
+    default: local
   application:
     name: invoice-tracking
   datasource:
     driverClassName: ${DS_DRIVER:org.postgresql.Driver}
-    url: jdbc:postgresql://localhost:5432/invoice_tracking}
-    username: ${DS_USERNAME:postgres}
-    password: ${DS_PASSWORD:8C:>0o0]Ib[m}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/invoice_tracking}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:8C:>0o0]Ib[m}
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -21,6 +23,11 @@ spring:
 logging:
   level:
     root: INFO
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
 server:
   port: ${SERVER_PORT:8080}
 springdoc:

@@ -1,9 +1,9 @@
-import { inject, Injectable, signal } from '@angular/core';
-import {BillingAccountResponse} from '~/api/models/billing-account-response';
-import {NotificationResponse} from '~/api/models/notification-response';
+import { inject, Injectable, signal } from "@angular/core";
+import { BillingAccountResponse } from "~/api/models/billing-account-response";
+import { NotificationResponse } from "~/api/models/notification-response";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class BillingService {
   // Signal to store card items

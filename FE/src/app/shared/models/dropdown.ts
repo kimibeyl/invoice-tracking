@@ -1,1 +1,4 @@
-export interface DropDownOptions { value: string; label: string; }
+export interface DropDownOptions {
+  value: string;
+  label: string;
+}

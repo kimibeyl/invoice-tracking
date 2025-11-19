@@ -6,7 +6,7 @@ export interface NotificationSearchRequest {
   accountId?: string;
   fromDate?: string;
   message?: string;
-  status?: 'READ' | 'UNREAD';
+  status?: "READ" | "UNREAD";
   toDate?: string;
-  type?: 'IMPORTANT' | 'GENERAL';
+  type?: "IMPORTANT" | "GENERAL";
 }

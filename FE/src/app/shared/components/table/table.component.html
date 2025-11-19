@@ -23,21 +23,22 @@
         <th><p-tableHeaderCheckbox /></th>
         <th [attr.colspan]="columns.length + 1">
           <div class="space-between">
-              Selected Item count: {{selected().length}}
-            <ng-container *ngTemplateOutlet="selectedItemsTemplate() ?? null"></ng-container>
+            Selected Item count: {{ selected().length }}
+            <ng-container
+              *ngTemplateOutlet="selectedItemsTemplate() ?? null"
+            ></ng-container>
           </div>
         </th>
       } @else {
-      @if (showCheckbox()) {
-        <th></th>
-      }
-      @for (col of columns; track col) {
+        @if (showCheckbox()) {
+          <th></th>
+        }
+        @for (col of columns; track col) {
           <th [pSortableColumn]="col.sortField">
             {{ col.header }}
             <p-sortIcon [field]="col.sortField"></p-sortIcon>
-
           </th>
-      }
+        }
       }
     </tr>
     <tr [formGroup]="inputForm()" class="search-row">
@@ -57,77 +58,83 @@
               />
             }
             @case (Filter.Chip) {
-                <p-select
-                  (click)="$event.stopPropagation()"
-                  [options]="col.items"
-                  appendTo="body"
-                  optionLabel="name"
-                  optionValue="value"
-                  placeholder="Search"
-                  [formControlName]="col.field"
-                >
-                </p-select>
+              <p-select
+                (click)="$event.stopPropagation()"
+                [options]="col.items"
+                appendTo="body"
+                optionLabel="name"
+                optionValue="value"
+                placeholder="Search"
+                [formControlName]="col.field"
+              >
+              </p-select>
             }
             @case (Filter.Dropdown) {
-                <p-select
-                  (click)="$event.stopPropagation()"
-                  [options]="col.items"
-                  [filter]="true"
-                  appendTo="body"
-                  optionLabel="name"
-                  optionValue="value"
-                  placeholder="Search"
-                  [formControlName]="col.field"
-                >
-                </p-select>
+              <p-select
+                (click)="$event.stopPropagation()"
+                [options]="col.items"
+                [filter]="true"
+                appendTo="body"
+                optionLabel="name"
+                optionValue="value"
+                placeholder="Search"
+                [formControlName]="col.field"
+              >
+              </p-select>
             }
             @case (Filter.Date) {
-                <p-date-picker
-                  (click)="$event.stopPropagation()"
-                  appendTo="body"
-                  placeholder="Search"
-                  [showIcon]="true"
-                  [iconDisplay]="'input'"
-                  [formControlName]="col.field"
-                >
-                </p-date-picker>
+              <p-date-picker
+                (click)="$event.stopPropagation()"
+                appendTo="body"
+                placeholder="Search"
+                [showIcon]="true"
+                [iconDisplay]="'input'"
+                [formControlName]="col.field"
+              >
+              </p-date-picker>
             }
           }
         </th>
       }
     </tr>
-
   </ng-template>
   <ng-template #body let-rowData let-rowIndex="rowIndex" let-columns="columns">
     <tr [pSelectableRow]="rowData">
       @if (showCheckbox()) {
         <td (click)="$event.stopPropagation()">
-          <p-tableCheckbox [value]="rowData" [disabled]="rowData['severity'] == 'success'" />
+          <p-tableCheckbox
+            [value]="rowData"
+            [disabled]="rowData['severity'] == 'success'"
+          />
         </td>
       }
       @if (loading()) {
-          @for (item of cols(); track item) {
-            <td><p-skeleton /></td>
-          }
+        @for (item of cols(); track item) {
+          <td><p-skeleton /></td>
+        }
       } @else {
-      @for (col of columns; track col) {
-        <td (click)="onRowSelect.emit(rowData)">
-          @if (col.type == Filter.Chip) {
-              <p-tag [rounded]="true" [value]="rowData[col.field]" [severity]="rowData['severity']"></p-tag>
-          }
-            @else if (rowData[col.field]) {
+        @for (col of columns; track col) {
+          <td (click)="onRowSelect.emit(rowData)">
+            @if (col.type == Filter.Chip) {
+              <p-tag
+                [rounded]="true"
+                [value]="rowData[col.field]"
+                [severity]="rowData['severity']"
+              ></p-tag>
+            } @else if (rowData[col.field]) {
               {{
                 col.type == Filter.Date
-                  ? (rowData[col.field] | date: 'yyyy-MM-dd')
-                    : col.type == Filter.Currency
-                      ? (rowData[col.field] | currency: 'ZAR':'symbol':'1.2-2')
-                      : (rowData[col.field])
+                  ? (rowData[col.field] | date: "yyyy-MM-dd")
+                  : col.type == Filter.Currency
+                    ? (rowData[col.field]
+                      | currency: "ZAR" : "symbol" : "1.2-2")
+                    : rowData[col.field]
               }}
             } @else {
               -
             }
-        </td>
-      }
+          </td>
+        }
       }
     </tr>
   </ng-template>

@@ -1,13 +1,13 @@
 <div class="container">
   <p-card header="Account Holder">
-  <app-table
-    [items]="items()"
-    [cols]="cols()"
-    [loading]="loading()"
-    [inputForm]="searchForm"
-    [totalRecords]="totalRecords()"
-    (onLazyLoad)="searchAccountHolders($event)"
-    (onRowSelect)="navigateToInvoice($event)"
-  ></app-table>
-</p-card>
+    <app-table
+      [items]="items()"
+      [cols]="cols()"
+      [loading]="loading()"
+      [inputForm]="searchForm"
+      [totalRecords]="totalRecords()"
+      (onLazyLoad)="searchAccountHolders($event)"
+      (onRowSelect)="navigateToInvoice($event)"
+    ></app-table>
+  </p-card>
 </div>

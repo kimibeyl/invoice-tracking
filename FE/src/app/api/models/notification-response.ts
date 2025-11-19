@@ -10,6 +10,6 @@ export interface NotificationResponse {
   invoiceNumber?: string;
   message?: string;
   notificationId?: string;
-  status?: 'READ' | 'UNREAD';
-  type?: 'IMPORTANT' | 'GENERAL';
+  status?: "READ" | "UNREAD";
+  type?: "IMPORTANT" | "GENERAL";
 }

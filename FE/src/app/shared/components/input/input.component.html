@@ -1,7 +1,12 @@
-<input type="text" [formControl]="control()" [placeholder]=placeholder() pInputText>
+<input
+  type="text"
+  [formControl]="control()"
+  [placeholder]="placeholder()"
+  pInputText
+/>
 <div class="validation-container">
   @if (control().invalid && (control().dirty || control().touched)) {
-    @if (control().errors?.['required']) {
+    @if (control().errors?.["required"]) {
       <div class="error-text">
         <small>This field is required</small>
       </div>

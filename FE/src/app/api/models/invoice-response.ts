@@ -12,6 +12,6 @@ export interface InvoiceResponse {
   invoiceDate?: string;
   invoiceId?: string;
   invoiceNumber?: string;
-  status?: 'PENDING' | 'PAID' | 'UNPAID' | 'DUE' | 'OVER_DUE' | 'CANCELLED';
+  status?: "PENDING" | "PAID" | "UNPAID" | "DUE" | "OVER_DUE" | "CANCELLED";
   vatAmount?: number;
 }

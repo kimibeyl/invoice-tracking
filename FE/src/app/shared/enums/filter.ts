@@ -4,5 +4,5 @@ export enum Filter {
   Chip,
   Currency,
   Dropdown,
-  None
+  None,
 }

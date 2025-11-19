@@ -1,29 +1,40 @@
 <p-menubar>
   <ng-template #start>
-    <img ngSrc="/assets/Logo.svg" alt="capitec" height="50" width="120"/>
+    <img ngSrc="/assets/Logo.svg" alt="capitec" height="50" width="120" />
   </ng-template>
   <ng-template #end>
     <div class="flex">
-      <p-button label="logout" icon="pi pi-sign-out" (click)="logout()"/>
-    <p-overlaybadge [value]="notifications().totalElements">
-      <p-button severity="primary" [rounded]="true" [text]="true"  icon="pi pi-bell" (click)="op.toggle($event)"></p-button>
-    </p-overlaybadge>
+      <p-button label="logout" icon="pi pi-sign-out" (click)="logout()" />
+      <p-overlaybadge [value]="notifications().totalElements">
+        <p-button
+          severity="primary"
+          [rounded]="true"
+          [text]="true"
+          icon="pi pi-bell"
+          (click)="op.toggle($event)"
+        ></p-button>
+      </p-overlaybadge>
     </div>
     <p-popover #op>
       <div class="flex flex-col">
         <div>
           <span>Notifications</span>
           <ul>
-            @for(notification of notifications()?.content; track notification.notificationId) {
+            @for (
+              notification of notifications()?.content;
+              track notification.notificationId
+            ) {
               <li>
                 <span>{{ notification.message }}</span>
               </li>
             }
           </ul>
-          <p-button label="View all" (click)="navigateToNotifications(); op.toggle($event)"></p-button>
+          <p-button
+            label="View all"
+            (click)="navigateToNotifications(); op.toggle($event)"
+          ></p-button>
         </div>
       </div>
     </p-popover>
-
   </ng-template>
 </p-menubar>

@@ -1,4 +1,4 @@
-import {Filter} from '../enums/filter';
+import { Filter } from "../enums/filter";
 
 export interface Column {
   field: string;

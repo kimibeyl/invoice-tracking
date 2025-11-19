@@ -7,6 +7,6 @@ export interface InvoiceCreateRequest {
   billingAccountId?: string;
   invoiceDate?: string;
   invoiceNumber?: string;
-  status?: 'PENDING' | 'PAID' | 'UNPAID' | 'DUE' | 'OVER_DUE' | 'CANCELLED';
+  status?: "PENDING" | "PAID" | "UNPAID" | "DUE" | "OVER_DUE" | "CANCELLED";
   vatAmount?: number;
 }
