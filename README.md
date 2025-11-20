@@ -87,7 +87,7 @@ npm install
 2. Generate Services: If the OpenAPI specification has changed, regenerate the services:
 
 ```bash
-ng-openapi-gen -c swagger-config (in this cas: FE\swagger\invoice-config.json)
+ng-openapi-gen -c swagger-config (in this case: FE\swagger\invoice-config.json)
 ```
 
 3. Run Application: Start the development server:
