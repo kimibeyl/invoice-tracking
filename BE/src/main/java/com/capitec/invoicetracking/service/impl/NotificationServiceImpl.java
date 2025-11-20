@@ -1,6 +1,5 @@
 package com.capitec.invoicetracking.service.impl;
 
-import com.capitec.invoicetracking.domain.entity.Invoice;
 import com.capitec.invoicetracking.domain.entity.Notification;
 import com.capitec.invoicetracking.domain.repository.NotificationRepository;
 import com.capitec.invoicetracking.enums.NotificationStatus;
