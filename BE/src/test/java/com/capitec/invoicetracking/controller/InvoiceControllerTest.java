@@ -90,47 +90,45 @@ class InvoiceControllerTest {
                 .contains("Invoice with identity " + invoiceId + " not found"));
     }
 
-//    @Test
-//    @WithMockUser(roles = "ADMIN")
-//    void testSearchInvoices_Success() throws Exception {
-//        // Arrange
-//        InvoiceSearchRequest searchRequest = new InvoiceSearchRequest();
-//        Invoice invoice = new Invoice();
-//        Page<Invoice> pagedInvoices = new PageImpl<>(Collections.singletonList(invoice), PageRequest.of(0, 20), 1);
-//        when(invoiceService.searchInvoices(any(Pageable.class), eq(searchRequest))).thenReturn(pagedInvoices);
-//        // Map invoice to response (simulate ModelMapper)
-//        InvoiceResponse invoiceResponse = new InvoiceResponse();
-//        when(modelMapper.map(any(Invoice.class), eq(InvoiceResponse.class))).thenReturn(invoiceResponse);
-//        when(pagedInvoices.map(any())).thenCallRealMethod(); // Use real method to avoid proxy errors
-//
-//        // Act & Assert
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/invoice/search")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content("{}"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-//    }
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void testSearchInvoices_Success() throws Exception {
+        // Arrange
+        InvoiceSearchRequest searchRequest = new InvoiceSearchRequest();
+        Invoice invoice = new Invoice();
+        Page<Invoice> pagedInvoices = new PageImpl<>(Collections.singletonList(invoice), PageRequest.of(0, 20), 1);
+        when(invoiceService.searchInvoices(any(Pageable.class), eq(searchRequest))).thenReturn(pagedInvoices);
+        // Map invoice to response (simulate ModelMapper)
+        InvoiceResponse invoiceResponse = new InvoiceResponse();
+        when(modelMapper.map(any(Invoice.class), eq(InvoiceResponse.class))).thenReturn(invoiceResponse);
 
-//    @Test
-//    @WithMockUser(roles = "ADMIN")
-//    void testSearchInvoices_UnPaged() throws Exception {
-//        // Arrange
-//        InvoiceSearchRequest searchRequest = new InvoiceSearchRequest();
-//        Invoice invoice = new Invoice();
-//        Page<Invoice> pagedInvoices = new PageImpl<>(Collections.singletonList(invoice), PageRequest.of(0, 20), 1);
-//        when(invoiceService.searchInvoices(any(Pageable.class), eq(searchRequest))).thenReturn(pagedInvoices);
-//        InvoiceResponse invoiceResponse = new InvoiceResponse();
-//        when(modelMapper.map(any(Invoice.class), eq(InvoiceResponse.class))).thenReturn(invoiceResponse);
-//        when(pagedInvoices.map(any())).thenCallRealMethod(); // Use real method to avoid bytebuddy serialization
-//
-//        // Act & Assert
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/invoice/search")
-//                        .param("unPaged", "true")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content("{}"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-//    }
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/invoice/search")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void testSearchInvoices_UnPaged() throws Exception {
+        // Arrange
+        InvoiceSearchRequest searchRequest = new InvoiceSearchRequest();
+        Invoice invoice = new Invoice();
+        Page<Invoice> pagedInvoices = new PageImpl<>(Collections.singletonList(invoice), PageRequest.of(0, 20), 1);
+        when(invoiceService.searchInvoices(any(Pageable.class), eq(searchRequest))).thenReturn(pagedInvoices);
+        InvoiceResponse invoiceResponse = new InvoiceResponse();
+        when(modelMapper.map(any(Invoice.class), eq(InvoiceResponse.class))).thenReturn(invoiceResponse);
+
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/invoice/search")
+                        .param("unPaged", "true")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
 
     @Test
     @WithMockUser(roles = "ADMIN")

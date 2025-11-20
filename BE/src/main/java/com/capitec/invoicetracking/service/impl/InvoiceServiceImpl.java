@@ -20,12 +20,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -73,13 +73,18 @@ public class InvoiceServiceImpl implements InvoiceService {
                     predicates.add(cb.or(statusPredicates.toArray(new Predicate[0])));
                 }
             }
-            if(request.getAmount() != null){
+            if (request.getAmount() != null) {
                 predicates.add(cb.equal(root.get("amount"), request.getAmount()));
             }
 
             if (predicates.isEmpty()) {
-               predicates.add(cb.like(cb.upper(root.get("createdBy")), "SYSTEM"));
+                return null;
             }
+
+            if (query == null) {
+                return null;
+            }
+
             return query.where(predicates.toArray(new Predicate[0])).getRestriction();
 
         }, pageable);
@@ -95,14 +100,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     public Invoice createInvoice(InvoiceCreateRequest request) {
         Invoice invoice = invoiceRepository.findByInvoiceNumber(request.getInvoiceNumber()).orElse(null);
 
-        if(invoice != null)
-        {
-            throw new InvoiceException(HttpStatusCode.valueOf(400),"Invoice Number already exists");
+        if (invoice != null) {
+            throw new InvoiceException(HttpStatusCode.valueOf(400), "Invoice Number already exists");
         }
 
-        if(request.getAmount() == null || request.getAmount().compareTo(BigDecimal.ZERO) == 0)
-        {
-            throw new InvoiceException(HttpStatusCode.valueOf(400),"Invoice amount can not be 0 or Null");
+        if (request.getAmount() == null || request.getAmount().compareTo(BigDecimal.ZERO) == 0) {
+            throw new InvoiceException(HttpStatusCode.valueOf(400), "Invoice amount can not be 0 or Null");
         }
 
         BillingAccount billingAccount = billingAccountRepository.findById(request.getBillingAccountId()).orElseThrow(() ->
@@ -116,10 +119,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setVatAmount(request.getVatAmount());
         invoice.setStatus(InvoiceStatus.PENDING);
         invoice.setBillingAccount(billingAccount);
-        invoice.setCreatedAt(Instant.now().getEpochSecond());
-        invoice.setCreatedBy("SYSTEM");
-        invoice.setModifiedAt(Instant.now().getEpochSecond());
-        invoice.setModifiedBy("SYSTEM");
         return invoiceRepository.save(invoice);
     }
 
@@ -135,48 +134,52 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setAmount(request.getAmount());
         invoice.setVatAmount(request.getVatAmount());
         invoice.setStatus(request.getStatus());
-        invoice.setCreatedBy("SYSTEM");
-        invoice.setModifiedAt(Instant.now().getEpochSecond());
-        invoice.setModifiedBy("SYSTEM");
         return invoiceRepository.save(invoice);
     }
 
     @Override
+    @Transactional
     public void checkPaymentStatus() {
-        List<Invoice> invoiceList = invoiceRepository.findAll().stream().toList();
-        for(Invoice invoice : invoiceList)
-        {
-            if(invoice.getStatus() == InvoiceStatus.PENDING || invoice.getStatus() == InvoiceStatus.UNPAID || invoice.getStatus() == InvoiceStatus.DUE)
-            {
-                long now = invoice.getInvoiceDate();
-                var thirtyDates = Instant.now().plus(30, ChronoUnit.DAYS).getEpochSecond();
-                var sixtyDates = Instant.now().plus(60, ChronoUnit.DAYS).getEpochSecond();
-                var ninetyDates = Instant.now().plus(90, ChronoUnit.DAYS).getEpochSecond();
 
-                if(thirtyDates >= now)
-                {
+        List<Invoice> invoices = invoiceRepository.findAll();
+        long now = Instant.now().getEpochSecond();
+
+        for (Invoice invoice : invoices) {
+
+            if (invoice.getStatus() == InvoiceStatus.PENDING ||
+                    invoice.getStatus() == InvoiceStatus.UNPAID ||
+                    invoice.getStatus() == InvoiceStatus.DUE) {
+
+                long invoiceDate = invoice.getInvoiceDate();
+                long daysOverdue = (now - invoiceDate) / 86400;
+
+                if (daysOverdue >= 30) {
+
+                    InvoiceStatus newStatus;
+                    String message;
+
+                    if (daysOverdue >= 90) {
+                        newStatus = InvoiceStatus.OVER_DUE;
+                        message = "Invoice" + invoice.getInvoiceNumber() + " 90 days Overdue";
+                    } else if (daysOverdue >= 60) {
+                        newStatus = InvoiceStatus.DUE;
+                        message = "Invoice" + invoice.getInvoiceNumber() + " 60 days Overdue";
+                    } else {
+                        newStatus = InvoiceStatus.UNPAID;
+                        message = "Invoice" + invoice.getInvoiceNumber() + " 30 days Overdue";
+                    }
+
+                    // Update and flush invoice immediately
+                    invoice.setStatus(newStatus);
+                    Invoice savedInvoice = invoiceRepository.saveAndFlush(invoice);
+
+                    // Create notification with the freshly saved invoice
                     Notification notification = new Notification();
                     notification.setType(NotificationType.IMPORTANT);
                     notification.setStatus(NotificationStatus.UNREAD);
-                    notification.setInvoice(invoice);
-                    notification.setCreatedAt(Instant.now().getEpochSecond());
-                    notification.setCreatedBy("SYSTEM");
-                    notification.setModifiedAt(Instant.now().getEpochSecond());
-                    notification.setModifiedBy("SYSTEM");
+                    notification.setInvoice(savedInvoice);
+                    notification.setMessage(message);
 
-                    if(sixtyDates >= now ) {
-                        if(ninetyDates >= now) {
-                            invoice.setStatus(InvoiceStatus.OVER_DUE);
-                            notification.setMessage("Invoice" + invoice.getInvoiceNumber() + " 90 days Overdue");
-                        } else {
-                            invoice.setStatus(InvoiceStatus.DUE);
-                            notification.setMessage("Invoice" + invoice.getInvoiceNumber() + " 60 days Overdue");
-                        }
-                    }
-                    else {
-                        invoice.setStatus(InvoiceStatus.UNPAID);
-                        notification.setMessage("Invoice" + invoice.getInvoiceNumber() + " 30 days Overdue");
-                    }
                     notificationRepository.save(notification);
                 }
             }

@@ -48,7 +48,7 @@ Ensure your project contains a .env file (or equivalent configuration) for setti
 Execute the following command in the root directory where your docker-compose.yml file is located:
 
 ```bash
-docker-compose up --build
+docker-compose up -d
 ```
 
 - The first run will build the Docker images for both the Spring Boot and Angular applications, and start the PostgreSQL container.

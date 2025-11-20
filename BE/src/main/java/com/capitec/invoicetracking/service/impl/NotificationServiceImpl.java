@@ -65,6 +65,14 @@ public class NotificationServiceImpl implements NotificationService {
                 predicates.add(cb.between(root.get("createdAt"), fromEpoch, Instant.now().getEpochSecond()));
             }
 
+            if (predicates.isEmpty()) {
+                return null;
+            }
+
+            if (query == null) {
+                return null;
+            }
+
             return query.where(predicates.toArray(new Predicate[0])).getRestriction();
 
         }, pageable);

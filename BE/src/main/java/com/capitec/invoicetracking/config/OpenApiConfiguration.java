@@ -8,11 +8,13 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
+@Profile("!test")
 @OpenAPIDefinition(
         info = @Info(
                 title = "Invoice Tracking",

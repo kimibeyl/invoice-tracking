@@ -24,26 +24,41 @@ public class BillingAccountServiceImpl implements BillingAccountService {
     @Override
     public Page<BillingAccount> searchAccountHolders(Pageable pageable, BillingAccountSearchRequest request) {
         return billingAccountRepository.findAll((root, query, cb) -> {
-
             List<Predicate> predicates = new ArrayList<>();
-            if (StringUtils.isNotBlank(request.getName())) {
-                predicates.add(cb.like(cb.lower(root.get("name")), "%" + request.getName().toLowerCase() + "%"));
-            }
-            if (StringUtils.isNotBlank(request.getPhone())) {
-                predicates.add(cb.like(cb.lower(root.get("phone")), "%" + request.getPhone().toLowerCase() + "%"));
-            }
-            if (StringUtils.isNotBlank(request.getEmail())) {
-                predicates.add(cb.like(cb.lower(root.get("email")), "%" + request.getEmail().toLowerCase() + "%"));
-            }
-            if (StringUtils.isNotBlank(request.getAddress())) {
-                predicates.add(cb.like(cb.lower(root.get("address")), "%" + request.getAddress().toLowerCase() + "%"));
+
+            if (request != null) {
+                if (StringUtils.isNotBlank(request.getName())) {
+                    predicates.add(cb.like(cb.lower(root.get("name")), "%" + escapeSqlLike(request.getName().toLowerCase()) + "%"));
+                }
+                if (StringUtils.isNotBlank(request.getPhone())) {
+                    predicates.add(cb.like(cb.lower(root.get("phone")), "%" + escapeSqlLike(request.getPhone().toLowerCase()) + "%"));
+                }
+                if (StringUtils.isNotBlank(request.getEmail())) {
+                    predicates.add(cb.like(cb.lower(root.get("email")), "%" + escapeSqlLike(request.getEmail().toLowerCase()) + "%"));
+                }
+                if (StringUtils.isNotBlank(request.getAddress())) {
+                    predicates.add(cb.like(cb.lower(root.get("address")), "%" + escapeSqlLike(request.getAddress().toLowerCase()) + "%"));
+                }
             }
 
+            // If no predicates are added (null request or all fields blank), return all results (no where clause)
             if (predicates.isEmpty()) {
-                predicates.add(cb.like(cb.upper(root.get("createdBy")), "SYSTEM"));
+                return null;
             }
-            return query.where(predicates.toArray(new Predicate[0])).getRestriction();
 
+            if (query == null) {
+                return null;
+            }
+
+            return query.where(predicates.toArray(new Predicate[0])).getRestriction();
         }, pageable);
     }
+
+    private String escapeSqlLike(String term) {
+        if (term == null) return null;
+        return term.replace("\\", "\\\\")
+                .replace("%", "\\%")
+                .replace("_", "\\_");
+    }
+
 }
